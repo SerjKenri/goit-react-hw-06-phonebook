@@ -16,8 +16,8 @@ export function ContactForm() {
         const contactNumber = number.value;
 
         if (
-            !contacts.length &&
-            contacts.some(contact => contact.number !== contactNumber)
+            !contacts.length ||
+            !contacts.some(contact => contact.number === contactNumber)
         ) {
             const newContact = {
                 id: nanoid(5),
