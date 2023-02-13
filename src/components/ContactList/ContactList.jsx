@@ -1,29 +1,32 @@
-import propTypes from 'prop-types';
 import css from './ContactList.module.css';
 import { ConctactListItem } from 'components/ContactListItem/ContactListItem';
 import { nanoid } from 'nanoid';
+import { getContacts, getStatusFilter } from 'redux/selectors';
+import { useSelector } from 'react-redux';
 
-export const ContactList = ({ contacts, onDelete }) => (
-    <ul className={css.ulStyle}>
-        {contacts.map(({ number, name, id }) => (
-            <ConctactListItem
-                key={nanoid(5)}
-                id={id}
-                name={name}
-                number={number}
-                onDelete={onDelete}
-            />
-        ))}
-    </ul>
-);
+export const ContactList = () => {
+    const contacts = useSelector(getContacts);
+    const filterValue = useSelector(getStatusFilter);
 
-ContactList.propTypes = {
-    contacts: propTypes.arrayOf(
-        propTypes.exact({
-            id: propTypes.string.isRequired,
-            name: propTypes.string.isRequired,
-            number: propTypes.string.isRequired,
-        })
-    ),
-    onDelete: propTypes.func.isRequired,
+    const handleFilter = () => {
+        const filterContactsList = contacts.filter(contact => {
+            return contact.name
+                .toLowerCase()
+                .includes(filterValue.toLowerCase().trim());
+        });
+        return filterContactsList;
+    };
+
+    return (
+        <ul className={css.ulStyle}>
+            {handleFilter().map(({ number, name, id }) => (
+                <ConctactListItem
+                    key={nanoid(5)}
+                    id={id}
+                    name={name}
+                    number={number}
+                />
+            ))}
+        </ul>
+    );
 };
